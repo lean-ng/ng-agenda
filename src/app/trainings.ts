@@ -1,5 +1,5 @@
 export type TopicState = "" | "onthefly" | "deprecated" | "postponed";
-export type ItemState = "" | "deprecated";
+export type ItemState = "" | "deprecated" | "edited";
 
 export type Item = {
   id: number;
@@ -8,6 +8,7 @@ export type Item = {
   nr: number;
   done?: boolean;
   priority?: boolean;
+  editedText?: string;
 };
 
 export type Topic = {

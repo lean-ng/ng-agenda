@@ -1,4 +1,4 @@
-<div class="mx-auto max-w-2xl my-8">
+<div class="mx-auto max-w-4xl my-8">
   <div class="flex items-center justify-between">
     <h1 class="text-3xl font-medium">{{ title }}</h1>
     <button class="btn btn-primary" (click)="syncTraining()">
@@ -39,14 +39,31 @@
         </div>
         <ul class="">
           @for (item of topic.items; track item.id) {
-            <li class="relative ml-8 py-1.5 flex items-center gap-x-4">
-              <input
-                type="checkbox"
-                [checked]="item.done"
-                (change)="toggleItemDone(topic, item)"
-                class="checkbox checkbox-success"
+            <li class="relative mx-8 py-1.5 flex justify-between">
+              <div class="flex items-center gap-x-4">
+                <input
+                  type="checkbox"
+                  [checked]="item.done"
+                  (change)="toggleItemDone(topic, item)"
+                  class="checkbox"
+                  [disabled]="item.state === 'deprecated'"
+                  [class]="
+                    item.state === 'deprecated'
+                      ? 'checkbox-error'
+                      : 'checkbox-success'
+                  "
+                />
+                <span
+                  [class.line-through]="item.state === 'deprecated'"
+                  [class.text-error]="item.state === 'deprecated'"
+                  >{{ item.text }}</span
+                >
+              </div>
+              <item-panel
+                [state]="item.state"
+                (markItem)="markItem(topic, item, $event)"
+                (edit)="editItem(item)"
               />
-              <span>{{ item.text }}</span>
             </li>
           }
         </ul>
@@ -133,4 +150,23 @@
       }
     </div>
   }
+  <dialog #dialog class="modal">
+    <div class="modal-box">
+      <form method="dialog">
+        <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
+          ✕
+        </button>
+      </form>
+      <h3 class="text-lg font-bold">Hello!</h3>
+      <p
+        class="py-4"
+        [innerHtml]="
+          selectedItem() && (selectedItem().editedText || selectedItem().text)
+        "
+      ></p>
+    </div>
+    <form method="dialog" class="modal-backdrop">
+      <button>close</button>
+    </form>
+  </dialog>
 </div>
