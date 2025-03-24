@@ -1,0 +1,136 @@
+<div class="mx-auto max-w-2xl my-8">
+  <div class="flex items-center justify-between">
+    <h1 class="text-3xl font-medium">{{ title }}</h1>
+    <button class="btn btn-primary" (click)="syncTraining()">
+      Zurücksetzen
+    </button>
+  </div>
+
+  <div class="mt-8 collapse bg-base-100 border-base-300 border">
+    <input type="checkbox" />
+    <div class="collapse-title font-semibold">Wieviel ist noch übrig?</div>
+    <div class="collapse-content text-sm">
+      Insgesamt sind noch {{ stats().leftTopics }} Themen zu erledigen. Darin
+      enthalten sind {{ stats().leftItems }} einzelne Inhalte.
+    </div>
+  </div>
+
+  <div class="mt-8">
+    <h2 class="text-2xl font-medium">Agenda</h2>
+    <hr class="my-2" />
+  </div>
+
+  <div class="flex flex-col gap-y-4">
+    @for (topic of currentTopics(); track topic.id) {
+      <div>
+        <div class="flex items-center justify-between">
+          <div class="relative">
+            @if (topic.done) {
+              <span class="absolute top-1/4"
+                ><i-lucide [img]="checkIcon"
+              /></span>
+            }
+            <h3 class="ml-8 text-xl my-2">{{ topic.title }}</h3>
+          </div>
+          <topic-panel
+            [state]="topic.state"
+            (markTopic)="markTopic(topic, $event)"
+          />
+        </div>
+        <ul class="">
+          @for (item of topic.items; track item.id) {
+            <li class="relative ml-8 py-1.5 flex items-center gap-x-4">
+              <input
+                type="checkbox"
+                [checked]="item.done"
+                (change)="toggleItemDone(topic, item)"
+                class="checkbox checkbox-success"
+              />
+              <span>{{ item.text }}</span>
+            </li>
+          }
+        </ul>
+      </div>
+    }
+  </div>
+
+  @if (ontheflyTopics().length > 0) {
+    <div class="mt-8">
+      <h2 class="text-2xl font-medium">Nebenbei mit erledigt</h2>
+      <hr class="my-2" />
+    </div>
+
+    <div class="flex flex-col gap-y-4">
+      @for (topic of ontheflyTopics(); track topic.id) {
+        <div>
+          <div class="flex items-center justify-between">
+            <h3 class="text-xl my-2">{{ topic.title }}</h3>
+            <topic-panel
+              [state]="topic.state"
+              (markTopic)="markTopic(topic, $event)"
+            />
+          </div>
+          <ul class="list-disc">
+            @for (item of topic.items; track item.id) {
+              <li class="ml-8">
+                <span>{{ item.text }}</span>
+              </li>
+            }
+          </ul>
+        </div>
+      }
+    </div>
+  }
+
+  @if (postponedTopics().length > 0) {
+    <div class="mt-8">
+      <h2 class="text-2xl font-medium">Niedrigere Priorität</h2>
+      <hr class="my-2" />
+    </div>
+
+    <div class="flex flex-col gap-y-4">
+      @for (topic of postponedTopics(); track topic.id) {
+        <div>
+          <div class="flex items-center justify-between">
+            <h3 class="text-xl my-2">{{ topic.title }}</h3>
+            <topic-panel
+              [state]="topic.state"
+              (markTopic)="markTopic(topic, $event)"
+            />
+          </div>
+          <ul class="list-disc">
+            @for (item of topic.items; track item.id) {
+              <li class="ml-8">{{ item.text }}</li>
+            }
+          </ul>
+        </div>
+      }
+    </div>
+  }
+
+  @if (deprecatedTopics().length > 0) {
+    <div class="mt-8">
+      <h2 class="text-2xl font-medium">Veraltete / irrelevante Themen</h2>
+      <hr class="my-2" />
+    </div>
+
+    <div class="flex flex-col gap-y-4">
+      @for (topic of deprecatedTopics(); track topic.id) {
+        <div>
+          <div class="flex items-center justify-between">
+            <h3 class="text-xl my-2">{{ topic.title }}</h3>
+            <topic-panel
+              [state]="topic.state"
+              (markTopic)="markTopic(topic, $event)"
+            />
+          </div>
+          <ul class="list-disc">
+            @for (item of topic.items; track item.id) {
+              <li class="ml-8">{{ item.text }}</li>
+            }
+          </ul>
+        </div>
+      }
+    </div>
+  }
+</div>
