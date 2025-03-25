@@ -56,13 +56,14 @@
                 <span
                   [class.line-through]="item.state === 'deprecated'"
                   [class.text-error]="item.state === 'deprecated'"
-                  >{{ item.text }}</span
-                >
+                  [innerHtml]="item.editedText ?? item.text"
+                ></span>
               </div>
               <item-panel
                 [state]="item.state"
                 (markItem)="markItem(topic, item, $event)"
                 (edit)="editItem(item)"
+                (reset)="resetEdit(item)"
               />
             </li>
           }
@@ -157,13 +158,17 @@
           ✕
         </button>
       </form>
-      <h3 class="text-lg font-bold">Hello!</h3>
-      <p
-        class="py-4"
-        [innerHtml]="
-          selectedItem() && (selectedItem().editedText || selectedItem().text)
-        "
-      ></p>
+      <h3 class="text-lg font-bold">Inhalt bearbeiten</h3>
+      <form (ngSubmit)="commitEdit()" class="mt-4 flex flex-col gap-y-4">
+        <textarea
+          type="text"
+          name="text"
+          [(ngModel)]="editText"
+          class="textarea w-full"
+          required
+        ></textarea>
+        <button type="submit" class="btn btn-primary">Speichern</button>
+      </form>
     </div>
     <form method="dialog" class="modal-backdrop">
       <button>close</button>

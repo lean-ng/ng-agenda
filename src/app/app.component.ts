@@ -2,10 +2,10 @@ import {
   Component,
   computed,
   signal,
-  effect,
   viewChild,
   ElementRef,
 } from "@angular/core";
+import { FormsModule } from "@angular/forms";
 import { TopicState, Topic, trainings, ItemState, Item } from "./trainings";
 import { TopicPanel } from "./components/topic-panel";
 import { CheckIcon, LucideAngularModule } from "lucide-angular";
@@ -17,7 +17,7 @@ const SELECTED_TRAINING = 0;
   selector: "app-root",
   templateUrl: "./app.component.html",
   styleUrl: "./app.component.css",
-  imports: [LucideAngularModule, TopicPanel, ItemPanel],
+  imports: [LucideAngularModule, TopicPanel, ItemPanel, FormsModule],
 })
 export class AppComponent {
   readonly checkIcon = CheckIcon;
@@ -113,10 +113,32 @@ export class AppComponent {
   }
 
   editDlg = viewChild<ElementRef<HTMLDialogElement>>("dialog");
+  editText = "";
   selectedItem = signal<Item>(undefined as never);
 
   editItem(item: Item) {
     this.selectedItem.update(() => item);
+    this.editText = item.editedText ?? item.text;
     this.editDlg()?.nativeElement.showModal();
+  }
+
+  commitEdit() {
+    const item = this.selectedItem();
+    item.editedText = this.editText;
+    item.state = "edited";
+    this.topics.update((topics) => {
+      localStorage.setItem("ng-agenda", JSON.stringify(topics));
+      return [...topics];
+    });
+    this.editDlg()?.nativeElement.close();
+  }
+
+  resetEdit(item: Item) {
+    item.state = "";
+    item.editedText = undefined;
+    this.topics.update((topics) => {
+      localStorage.setItem("ng-agenda", JSON.stringify(topics));
+      return [...topics];
+    });
   }
 }

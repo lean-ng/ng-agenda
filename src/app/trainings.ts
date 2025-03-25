@@ -166,7 +166,7 @@ export const trainings: Training[] = [
             nr: 2,
           },
           {
-            text: "emplates: Inline, Multi-line und Extern mit Komponenten-relativen Pfaden",
+            text: "Templates: Inline, Multi-line und Extern mit Komponenten-relativen Pfaden",
             state: "",
             id: 3,
             nr: 3,
@@ -266,7 +266,7 @@ export const trainings: Training[] = [
         id: 7,
         items: [
           {
-            text: "trukturell: ngFor, ngIf, ngSwitch",
+            text: "Strukturell: ngFor, ngIf, ngSwitch",
             state: "",
             nr: 1,
             id: 1,

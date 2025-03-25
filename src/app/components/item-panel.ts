@@ -20,6 +20,13 @@ import { ItemState } from "../trainings";
         <i-lucide [img]="editIcon" class="size-4" />
       </button>
       <button
+        (click)="reset.emit()"
+        class="btn btn-square btn-xs btn-accent btn-soft"
+        [disabled]="state() !== 'edited'"
+      >
+        <i-lucide [img]="resetIcon" class="size-4" />
+      </button>
+      <button
         (click)="toggleState('deprecated')"
         class="btn btn-square btn-xs btn-error"
         [class.btn-soft]="state() !== 'deprecated'"
@@ -46,4 +53,5 @@ export class ItemPanel {
   }
 
   edit = output();
+  reset = output();
 }
